@@ -5,7 +5,13 @@ const SPEED := 300.0
 const JUMP_VELOCITY := -750.0
 const GRAVITY := 1600.0
 
+@export var id := &"player"
+## 好きな人・嫌いな人のid
+@export var likes: Array[StringName] = []
+@export var dislikes: Array[StringName] = []
+
 var face := Face.new()
+var prefs := Preferences.new()
 
 @onready var _face_label: Label = $FaceLabel
 @onready var _sprite: AnimatedSprite2D = $AnimatedSprite2D
@@ -21,6 +27,10 @@ static func compute_velocity(current: Vector2, direction: float, jump_pressed: b
 
 
 func _ready() -> void:
+	for other in likes:
+		prefs.like(other)
+	for other in dislikes:
+		prefs.dislike(other)
 	_refresh_face()
 
 
@@ -38,6 +48,15 @@ func _physics_process(delta: float) -> void:
 
 func obtain_wanted_item() -> void:
 	face.obtain_wanted_item()
+	_refresh_face()
+
+
+## subjectに起きた出来事を見て、好き嫌いに応じた表情になる
+func witness(subject: StringName, is_good: bool) -> void:
+	var reaction := Appraisal.appraise(id, subject, is_good, prefs)
+	if reaction == Appraisal.NO_REACTION:
+		return
+	face.feel(reaction)
 	_refresh_face()
 
 
