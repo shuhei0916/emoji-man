@@ -47,11 +47,30 @@ class Goal:
 		is_maintenance_goal = p_is_maintenance_goal
 
 
+## ある相手への関係。like は好き嫌い（-1〜1）、emotion_list はその相手に向けた感情（怒り・同情など）
+class Relation:
+	var agent_name: StringName
+	var like: float
+	var emotion_list: Array[Emotion] = []
+
+	func _init(p_target_name: StringName, p_like: float) -> void:
+		agent_name = p_target_name
+		like = p_like
+
+	func add_emotion(emotion: Emotion) -> void:
+		for e in emotion_list:
+			if e.name == emotion.name:
+				e.intensity += emotion.intensity
+				return
+		emotion_list.append(Emotion.new(emotion.name, emotion.intensity))
+
+
 ## 感情を持つ主体（NPCやプレイヤー）
 class Agent:
 	var name: StringName
 	var goals: Array[Goal] = []
 	var internal_state: Array[Emotion] = []
+	var current_relations: Array[Relation] = []
 
 	func _init(p_name: StringName) -> void:
 		name = p_name
@@ -78,6 +97,23 @@ class Agent:
 
 	func get_emotional_state(_use_gain := false) -> Array[Emotion]:
 		return internal_state
+
+	## 相手との関係を設定する（なければ作る）
+	func update_relation(agent_name: StringName, like: float) -> void:
+		var relation := get_relation(agent_name)
+		if relation == null:
+			current_relations.append(Relation.new(agent_name, like))
+		else:
+			relation.like = like
+
+	func has_relation_with(agent_name: StringName) -> bool:
+		return get_relation(agent_name) != null
+
+	func get_relation(agent_name: StringName) -> Relation:
+		for r in current_relations:
+			if r.agent_name == agent_name:
+				return r
+		return null
 
 
 var agents: Array[Agent] = []
@@ -140,9 +176,11 @@ func appraise(belief: Belief) -> void:
 			continue
 		var utility := goal.utility
 		var delta_likelihood := _calculate_delta_likelihood(goal, belief.goal_congruences[i], belief.likelihood, belief.is_incremental)
+		var desirability := delta_likelihood * utility
 		for owner in agents:
 			if owner.has_goal(goal.name):
 				_evaluate_internal_emotion(utility, delta_likelihood, goal.likelihood, owner)
+				_agent_actions(owner.name, belief.causal_agent_name, owner.name, desirability, utility, delta_likelihood)
 
 
 ## 出来事による目標の見込みの変化量を求め、目標の見込みを更新する。
@@ -195,3 +233,18 @@ func _evaluate_internal_emotion(utility: float, delta_likelihood: float, likelih
 	if intensity != 0.0:
 		for emotion_name in emotions:
 			agent.update_emotional_state(Emotion.new(emotion_name, intensity))
+
+
+## 出来事を引き起こした人に向けた感情（感謝・怒り）を評価する。
+## affected_name: 目標の持ち主, causal_name: 引き起こした人, self_name: 感情を持つ人
+func _agent_actions(affected_name: StringName, causal_name: StringName, self_name: StringName, desirability: float, utility: float, delta_likelihood: float) -> void:
+	if causal_name == &"":
+		return
+	if affected_name == self_name and self_name != causal_name:
+		# 自分の目標が他人によって左右された
+		var emotion := Emotion.new(&"gratitude" if desirability >= 0.0 else &"anger", absf(utility * delta_likelihood))
+		var self_agent := get_agent_by_name(self_name)
+		if not self_agent.has_relation_with(causal_name):
+			self_agent.update_relation(causal_name, 0.0)
+		self_agent.get_relation(causal_name).add_emotion(emotion)
+		self_agent.update_emotional_state(emotion)

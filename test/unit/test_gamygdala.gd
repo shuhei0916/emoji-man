@@ -86,3 +86,23 @@ func test_増分の出来事は見込みに加算される():
 	engine.appraise_belief(0.2, &"", [&"win"], [1.0], true)
 	assert_almost_eq(goal.likelihood, 0.7, 0.000001)
 	assert_emotions(a, {"hope": 0.2})
+
+
+func test_他人のせいで目標が妨げられるとその人に怒る():
+	var a := engine.create_agent(&"a")
+	engine.create_agent(&"b")
+	engine.create_goal_for_agent(&"a", &"star", 1.0)
+	engine.appraise_belief(1.0, &"b", [&"star"], [-1.0])
+	assert_emotions(a, {"distress": 0.5, "anger": 0.5})
+	var relation := a.get_relation(&"b")
+	assert_eq(relation.like, 0.0, "関係がなければ好き嫌い0で作られる")
+	assert_eq(relation.emotion_list.size(), 1)
+	assert_eq(relation.emotion_list[0].name, &"anger")
+
+
+func test_他人のおかげで目標が叶うとその人に感謝する():
+	var a := engine.create_agent(&"a")
+	engine.create_agent(&"b")
+	engine.create_goal_for_agent(&"a", &"star", 1.0)
+	engine.appraise_belief(1.0, &"b", [&"star"], [1.0])
+	assert_emotions(a, {"joy": 0.5, "gratitude": 0.5})
