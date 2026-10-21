@@ -8,6 +8,7 @@ var player: Player
 
 
 func before_each():
+	add_child_autofree(EmotionWorld.new())
 	item = add_child_autofree(ItemScene.instantiate())
 	player = PlayerScene.instantiate()
 	player.wants = [item.item_id]
@@ -16,7 +17,7 @@ func before_each():
 
 func test_キャラクターが触れるとそのアイテムを手に入れる():
 	item._on_body_entered(player)
-	assert_eq(player.face.mood, Face.Mood.HAPPY)
+	assert_eq(player.get_node("FaceLabel").text, "😄")
 
 
 func test_キャラクターが触れるとアイテムは消える():
