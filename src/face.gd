@@ -24,10 +24,6 @@ func feel(new_mood: Mood) -> void:
 	_mood_time_left = MOOD_DURATION
 
 
-func obtain_wanted_item() -> void:
-	feel(Mood.HAPPY)
-
-
 func update(delta: float) -> void:
 	if mood == Mood.NEUTRAL:
 		return
