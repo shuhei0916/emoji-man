@@ -3,8 +3,17 @@ extends RefCounted
 
 enum Mood { NEUTRAL, HAPPY }
 
+const EMOJIS := {
+	Mood.NEUTRAL: "😐",
+	Mood.HAPPY: "😄",
+}
+
 var mood := Mood.NEUTRAL
 
 
 func obtain_wanted_item() -> void:
 	mood = Mood.HAPPY
+
+
+func get_emoji() -> String:
+	return EMOJIS[mood]
