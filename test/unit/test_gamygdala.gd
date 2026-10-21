@@ -106,3 +106,45 @@ func test_他人のおかげで目標が叶うとその人に感謝する():
 	engine.create_goal_for_agent(&"a", &"star", 1.0)
 	engine.appraise_belief(1.0, &"b", [&"star"], [1.0])
 	assert_emotions(a, {"joy": 0.5, "gratitude": 0.5})
+
+
+func _setup_fan_and_rival() -> Array[Gamygdala.Agent]:
+	engine.create_agent(&"a")
+	var fan := engine.create_agent(&"fan")
+	var rival := engine.create_agent(&"rival")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.create_relation(&"fan", &"a", 1.0)
+	engine.create_relation(&"rival", &"a", -0.5)
+	return [fan, rival]
+
+
+func test_好きな人に良いことがあると喜び_嫌いな人だと妬む():
+	var pair := _setup_fan_and_rival()
+	engine.appraise_belief(1.0, &"", [&"win"], [1.0])
+	assert_emotions(pair[0], {"happy-for": 0.5})
+	assert_emotions(pair[1], {"resentment": 0.25})
+
+
+func test_好きな人に悪いことがあると同情し_嫌いな人だとざまあみろと思う():
+	var pair := _setup_fan_and_rival()
+	engine.appraise_belief(1.0, &"", [&"win"], [-1.0])
+	assert_emotions(pair[0], {"pity": 0.5})
+	assert_emotions(pair[1], {"gloating": 0.25})
+
+
+func test_好きな人のために良いことをすると満悦する():
+	engine.create_agent(&"a")
+	var helper := engine.create_agent(&"helper")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.create_relation(&"helper", &"a", 0.8)
+	engine.appraise_belief(1.0, &"helper", [&"win"], [1.0])
+	assert_emotions(helper, {"happy-for": 0.4, "gratification": 0.4})
+
+
+func test_好きな人に悪いことをすると後悔する():
+	engine.create_agent(&"a")
+	var helper := engine.create_agent(&"helper")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.create_relation(&"helper", &"a", 0.8)
+	engine.appraise_belief(1.0, &"helper", [&"win"], [-1.0])
+	assert_emotions(helper, {"pity": 0.4, "remorse": 0.4})
