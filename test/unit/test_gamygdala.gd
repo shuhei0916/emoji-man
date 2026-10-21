@@ -148,3 +148,13 @@ func test_好きな人に悪いことをすると後悔する():
 	engine.create_relation(&"helper", &"a", 0.8)
 	engine.appraise_belief(1.0, &"helper", [&"win"], [-1.0])
 	assert_emotions(helper, {"pity": 0.4, "remorse": 0.4})
+
+
+func test_同じ目標を持つ全員がそれぞれ評価する():
+	var a := engine.create_agent(&"a")
+	var b := engine.create_agent(&"b")
+	engine.create_goal_for_agent(&"a", &"star", 1.0)
+	engine.create_goal_for_agent(&"b", &"star", 1.0)
+	engine.appraise_belief(1.0, &"a", [&"star"], [1.0])
+	assert_emotions(a, {"joy": 0.5})
+	assert_emotions(b, {"joy": 0.5, "gratitude": 0.5})
