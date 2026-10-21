@@ -145,9 +145,18 @@ func appraise(belief: Belief) -> void:
 				_evaluate_internal_emotion(utility, delta_likelihood, goal.likelihood, owner)
 
 
-func _calculate_delta_likelihood(goal: Goal, congruence: float, likelihood: float, _is_incremental: bool) -> float:
+## 出来事による目標の見込みの変化量を求め、目標の見込みを更新する。
+## 増分の出来事は見込みに加算し、そうでなければ出来事が見込みそのものを決める。
+## 達成目標（維持目標でないもの）は、一度確定（1 か -1）したら変わらない
+func _calculate_delta_likelihood(goal: Goal, congruence: float, likelihood: float, is_incremental: bool) -> float:
 	var old_likelihood := goal.likelihood
-	var new_likelihood := (congruence * likelihood + 1.0) / 2.0
+	if not goal.is_maintenance_goal and (old_likelihood >= 1.0 or old_likelihood <= -1.0):
+		return 0.0
+	var new_likelihood: float
+	if is_incremental:
+		new_likelihood = clampf(old_likelihood + likelihood * congruence, -1.0, 1.0)
+	else:
+		new_likelihood = (congruence * likelihood + 1.0) / 2.0
 	goal.likelihood = new_likelihood
 	return new_likelihood - old_likelihood
 

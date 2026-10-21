@@ -70,3 +70,19 @@ func test_恐れていたことが確定すると恐れが的中し苦しむ():
 	engine.appraise_belief(0.6, &"", [&"die"], [1.0])
 	engine.appraise_belief(1.0, &"", [&"die"], [1.0])
 	assert_emotions(a, {"fear": 0.3, "fear-confirmed": 0.2, "distress": 0.2})
+
+
+func test_達成目標は一度確定すると変わらない():
+	var a := engine.create_agent(&"a")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.appraise_belief(1.0, &"", [&"win"], [1.0])
+	engine.appraise_belief(1.0, &"", [&"win"], [-1.0])
+	assert_emotions(a, {"joy": 0.5})
+
+
+func test_増分の出来事は見込みに加算される():
+	var a := engine.create_agent(&"a")
+	var goal := engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.appraise_belief(0.2, &"", [&"win"], [1.0], true)
+	assert_almost_eq(goal.likelihood, 0.7, 0.000001)
+	assert_emotions(a, {"hope": 0.2})
