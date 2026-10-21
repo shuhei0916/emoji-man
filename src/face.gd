@@ -6,23 +6,33 @@ enum Mood { NEUTRAL, HAPPY, SAD, HAPPY_FOR, PITY, RESENTMENT, GLOATING }
 const EMOJIS := {
 	Mood.NEUTRAL: "😐",
 	Mood.HAPPY: "😄",
+	Mood.SAD: "😢",
+	Mood.HAPPY_FOR: "🥰",
+	Mood.PITY: "🥺",
+	Mood.RESENTMENT: "😒",
+	Mood.GLOATING: "😏",
 }
-const HAPPY_DURATION := 10.0
+## 感情が続く秒数。過ぎると普通に戻る
+const MOOD_DURATION := 10.0
 
 var mood := Mood.NEUTRAL
-var _happy_time_left := 0.0
+var _mood_time_left := 0.0
+
+
+func feel(new_mood: Mood) -> void:
+	mood = new_mood
+	_mood_time_left = MOOD_DURATION
 
 
 func obtain_wanted_item() -> void:
-	mood = Mood.HAPPY
-	_happy_time_left = HAPPY_DURATION
+	feel(Mood.HAPPY)
 
 
 func update(delta: float) -> void:
-	if mood != Mood.HAPPY:
+	if mood == Mood.NEUTRAL:
 		return
-	_happy_time_left -= delta
-	if _happy_time_left <= 0.0:
+	_mood_time_left -= delta
+	if _mood_time_left <= 0.0:
 		mood = Mood.NEUTRAL
 
 
