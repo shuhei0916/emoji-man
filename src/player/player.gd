@@ -24,10 +24,6 @@ func _physics_process(delta: float) -> void:
 	_update_animation(direction)
 
 
-func obtain_wanted_item() -> void:
-	announce(true)
-
-
 func _update_animation(direction: float) -> void:
 	if direction != 0.0:
 		_sprite.flip_h = direction < 0.0
