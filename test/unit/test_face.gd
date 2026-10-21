@@ -40,6 +40,8 @@ var mood_emojis := [
 	[Face.Mood.PITY, "🥺"],
 	[Face.Mood.RESENTMENT, "😒"],
 	[Face.Mood.GLOATING, "😏"],
+	[Face.Mood.ANGER, "😠"],
+	[Face.Mood.GRATITUDE, "🥹"],
 ]
 
 

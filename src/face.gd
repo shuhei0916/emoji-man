@@ -1,7 +1,7 @@
 class_name Face
 extends RefCounted
 
-enum Mood { NEUTRAL, HAPPY, SAD, HAPPY_FOR, PITY, RESENTMENT, GLOATING }
+enum Mood { NEUTRAL, HAPPY, SAD, HAPPY_FOR, PITY, RESENTMENT, GLOATING, ANGER, GRATITUDE }
 
 const EMOJIS := {
 	Mood.NEUTRAL: "😐",
@@ -11,6 +11,8 @@ const EMOJIS := {
 	Mood.PITY: "🥺",
 	Mood.RESENTMENT: "😒",
 	Mood.GLOATING: "😏",
+	Mood.ANGER: "😠",
+	Mood.GRATITUDE: "🥹",
 }
 ## 感情が続く秒数。過ぎると普通に戻る
 const MOOD_DURATION := 10.0

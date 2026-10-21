@@ -40,3 +40,16 @@ func test_嫌いな人に悪いことが起きるとざまあみろ():
 func test_どうでもいい人に何が起きても反応しない():
 	assert_eq(Appraisal.appraise(ME, &"carol", true, prefs), Appraisal.NO_REACTION)
 	assert_eq(Appraisal.appraise(ME, &"carol", false, prefs), Appraisal.NO_REACTION)
+
+
+func test_他人のせいで自分に悪いことが起きると怒る():
+	assert_eq(Appraisal.appraise(ME, ME, false, prefs, &"bob"), Face.Mood.ANGER)
+
+
+func test_他人のおかげで自分に良いことが起きると感謝する():
+	assert_eq(Appraisal.appraise(ME, ME, true, prefs, &"alice"), Face.Mood.GRATITUDE)
+
+
+func test_自分で起こした出来事には幸せや悲しいになる():
+	assert_eq(Appraisal.appraise(ME, ME, true, prefs, ME), Face.Mood.HAPPY)
+	assert_eq(Appraisal.appraise(ME, ME, false, prefs, ME), Face.Mood.SAD)
