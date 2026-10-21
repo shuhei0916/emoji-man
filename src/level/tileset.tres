@@ -1,0 +1,81 @@
+[gd_resource type="TileSet" load_steps=17 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassMid.png" id="1_grassMid"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassLeft.png" id="2_grassLeft"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassRight.png" id="3_grassRight"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassCenter.png" id="4_grassCenter"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassHalfLeft.png" id="5_grassHalfLeft"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassHalfMid.png" id="6_grassHalfMid"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/grassHalfRight.png" id="7_grassHalfRight"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/box.png" id="8_box"]
+
+[sub_resource type="TileSetAtlasSource" id="src_grassMid"]
+resource_name = "grassMid"
+texture = ExtResource("1_grassMid")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[sub_resource type="TileSetAtlasSource" id="src_grassLeft"]
+resource_name = "grassLeft"
+texture = ExtResource("2_grassLeft")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[sub_resource type="TileSetAtlasSource" id="src_grassRight"]
+resource_name = "grassRight"
+texture = ExtResource("3_grassRight")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[sub_resource type="TileSetAtlasSource" id="src_grassCenter"]
+resource_name = "grassCenter"
+texture = ExtResource("4_grassCenter")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[sub_resource type="TileSetAtlasSource" id="src_grassHalfLeft"]
+resource_name = "grassHalfLeft"
+texture = ExtResource("5_grassHalfLeft")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 5, -35, 5)
+0:0/0/physics_layer_0/polygon_0/one_way = true
+
+[sub_resource type="TileSetAtlasSource" id="src_grassHalfMid"]
+resource_name = "grassHalfMid"
+texture = ExtResource("6_grassHalfMid")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 5, -35, 5)
+0:0/0/physics_layer_0/polygon_0/one_way = true
+
+[sub_resource type="TileSetAtlasSource" id="src_grassHalfRight"]
+resource_name = "grassHalfRight"
+texture = ExtResource("7_grassHalfRight")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 5, -35, 5)
+0:0/0/physics_layer_0/polygon_0/one_way = true
+
+[sub_resource type="TileSetAtlasSource" id="src_box"]
+resource_name = "box"
+texture = ExtResource("8_box")
+texture_region_size = Vector2i(70, 70)
+0:0/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-35, -35, 35, -35, 35, 35, -35, 35)
+
+[resource]
+tile_size = Vector2i(70, 70)
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("src_grassMid")
+sources/1 = SubResource("src_grassLeft")
+sources/2 = SubResource("src_grassRight")
+sources/3 = SubResource("src_grassCenter")
+sources/4 = SubResource("src_grassHalfLeft")
+sources/5 = SubResource("src_grassHalfMid")
+sources/6 = SubResource("src_grassHalfRight")
+sources/7 = SubResource("src_box")
