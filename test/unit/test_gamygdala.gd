@@ -208,3 +208,13 @@ func test_感情状態をPADに変換できる():
 	a.set_gain(2.0)
 	var gained := a.get_pad_state(true)
 	assert_almost_eq(gained, Vector3(-0.528302, 0.465241, -0.099099), Vector3.ONE * 0.000001)
+
+
+func test_減衰で感情が消えても次の感情は正しく減衰する():
+	# 原典との差異: 原典は削除した直後の要素の減衰を飛ばしてしまう
+	var a := engine.create_agent(&"a")
+	a.update_emotional_state(Gamygdala.Emotion.new(&"hope", 0.1))
+	a.update_emotional_state(Gamygdala.Emotion.new(&"joy", 0.5))
+	engine.set_decay(0.2, Gamygdala.DecayType.LINEAR)
+	engine.decay_all(1.0)
+	assert_emotions(a, {"joy": 0.3})
