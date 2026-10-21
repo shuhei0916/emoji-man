@@ -5,6 +5,13 @@ extends RefCounted
 ## 原典: https://github.com/broekens/gamygdala (js/Gamygdala.js)
 ## Copyright (c) 2015 broekens, MIT License（同じフォルダの LICENSE を参照）
 ## Popescu, Broekens, van Someren (2014) "GAMYGDALA: an Emotion Engine for Games"
+##
+## 原典との違い:
+## - 減衰は経過秒数を引数で受け取る（decay_all(seconds)）。原典は Date.now() で測り、startDecay でタイマー実行する
+## - 減衰で感情を削除したとき、直後の要素の減衰が飛ばされる原典の不具合を直した
+## - 満悦・後悔の評価で、引き起こした人が未登録でも例外にならないようにした
+## - PAD は配列ではなく Vector3 で返す
+## - 目標の見込みを関数で計算する仕組み（calculateLikelyhood）、デバッグ出力は移植していない
 
 
 ## 出来事についての信念。どの目標の達成にどれだけ近づく／遠ざかるかを表す
@@ -75,6 +82,8 @@ class Agent:
 	var internal_state: Array[Emotion] = []
 	var current_relations: Array[Relation] = []
 	var gain := 1.0
+	## 登録先のエンジン（相互参照でメモリが解放されなくなるのを避けるため弱参照）
+	var _engine: WeakRef
 
 	func _init(p_name: StringName) -> void:
 		name = p_name
@@ -88,6 +97,18 @@ class Agent:
 
 	func add_goal(goal: Goal) -> void:
 		goals.append(goal)
+
+	## 目標を取り除く。取り除けたら true
+	func remove_goal(goal_name: StringName) -> bool:
+		for i in goals.size():
+			if goals[i].name == goal_name:
+				goals.remove_at(i)
+				return true
+		return false
+
+	## この人の立場だけで出来事を評価する
+	func appraise(belief: Belief) -> void:
+		_engine.get_ref().appraise(belief, self)
 
 	func has_goal(goal_name: StringName) -> bool:
 		return get_goal_by_name(goal_name) != null
@@ -186,6 +207,7 @@ func create_agent(agent_name: StringName) -> Agent:
 
 func register_agent(agent: Agent) -> void:
 	agents.append(agent)
+	agent._engine = weakref(self)
 
 
 func get_agent_by_name(agent_name: StringName) -> Agent:
@@ -236,25 +258,38 @@ func appraise_belief(likelihood: float, causal_agent_name: StringName, affected_
 	appraise(Belief.new(likelihood, causal_agent_name, affected_goal_names, goal_congruences, is_incremental))
 
 
-## 出来事を、影響を受ける目標の持ち主全員の立場で評価する
-func appraise(belief: Belief) -> void:
+## 出来事を評価する。
+## affected_agent を省略すると、影響を受ける目標の持ち主全員の立場で評価する。
+## 指定すると、その人だけを目標の持ち主とみなして評価する（他の持ち主は感情を抱かない）
+func appraise(belief: Belief, affected_agent: Agent = null) -> void:
+	if belief.goal_congruences.size() != belief.affected_goal_names.size():
+		push_error("Gamygdala: the congruence list must be of the same length as the affected goal list")
+		return
 	for i in belief.affected_goal_names.size():
-		var goal := get_goal_by_name(belief.affected_goal_names[i])
+		var goal_name := belief.affected_goal_names[i]
+		var goal := get_goal_by_name(goal_name) if affected_agent == null else affected_agent.get_goal_by_name(goal_name)
 		if goal == null:
 			continue
-		var utility := goal.utility
 		var delta_likelihood := _calculate_delta_likelihood(goal, belief.goal_congruences[i], belief.likelihood, belief.is_incremental)
-		var desirability := delta_likelihood * utility
+		if affected_agent != null:
+			_appraise_for_owner(goal, delta_likelihood, belief.causal_agent_name, affected_agent)
+			continue
 		for owner in agents:
 			if owner.has_goal(goal.name):
-				_evaluate_internal_emotion(utility, delta_likelihood, goal.likelihood, owner)
-				_agent_actions(owner.name, belief.causal_agent_name, owner.name, desirability, utility, delta_likelihood)
-				# 目標の持ち主と関係を持つ人は、他人についての感情を抱く
-				for other in agents:
-					var relation := other.get_relation(owner.name)
-					if relation != null:
-						_evaluate_social_emotion(utility, desirability, delta_likelihood, relation, other)
-						_agent_actions(owner.name, belief.causal_agent_name, other.name, desirability, utility, delta_likelihood)
+				_appraise_for_owner(goal, delta_likelihood, belief.causal_agent_name, owner)
+
+
+## 目標の持ち主本人の感情と、持ち主と関係を持つ人の感情を評価する
+func _appraise_for_owner(goal: Goal, delta_likelihood: float, causal_agent_name: StringName, owner: Agent) -> void:
+	var utility := goal.utility
+	var desirability := delta_likelihood * utility
+	_evaluate_internal_emotion(utility, delta_likelihood, goal.likelihood, owner)
+	_agent_actions(owner.name, causal_agent_name, owner.name, desirability, utility, delta_likelihood)
+	for other in agents:
+		var relation := other.get_relation(owner.name)
+		if relation != null:
+			_evaluate_social_emotion(utility, desirability, delta_likelihood, relation, other)
+			_agent_actions(owner.name, causal_agent_name, other.name, desirability, utility, delta_likelihood)
 
 
 ## 出来事による目標の見込みの変化量を求め、目標の見込みを更新する。

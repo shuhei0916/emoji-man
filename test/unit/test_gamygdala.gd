@@ -218,3 +218,21 @@ func test_減衰で感情が消えても次の感情は正しく減衰する():
 	engine.set_decay(0.2, Gamygdala.DecayType.LINEAR)
 	engine.decay_all(1.0)
 	assert_emotions(a, {"joy": 0.3})
+
+
+func test_一人の立場だけで出来事を評価できる():
+	var a := engine.create_agent(&"a")
+	var b := engine.create_agent(&"b")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.create_goal_for_agent(&"b", &"win", 1.0)
+	a.appraise(Gamygdala.Belief.new(1.0, &"", [&"win"], [1.0]))
+	assert_emotions(a, {"joy": 0.5})
+	assert_emotions(b, {})
+
+
+func test_目標を取り除ける():
+	var a := engine.create_agent(&"a")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	assert_true(a.remove_goal(&"win"))
+	assert_false(a.has_goal(&"win"))
+	assert_false(a.remove_goal(&"win"))
