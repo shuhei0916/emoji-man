@@ -158,3 +158,53 @@ func test_同じ目標を持つ全員がそれぞれ評価する():
 	engine.appraise_belief(1.0, &"a", [&"star"], [1.0])
 	assert_emotions(a, {"joy": 0.5})
 	assert_emotions(b, {"joy": 0.5, "gratitude": 0.5})
+
+
+func test_ゲインを掛けると強さが0から1に収まる():
+	var a := engine.create_agent(&"a")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.set_gain(3.0)
+	engine.appraise_belief(1.0, &"", [&"win"], [1.0])
+	assert_emotions(a, {"joy": 0.6}, true)
+	assert_emotions(a, {"joy": 0.5}, false)
+
+
+func test_指数減衰では1秒ごとに強さが減衰係数倍になる():
+	var a := engine.create_agent(&"a")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.appraise_belief(1.0, &"", [&"win"], [1.0])
+	engine.decay_all(1.0)
+	assert_emotions(a, {"joy": 0.4})
+
+
+func test_線形減衰では強さが一定の割合で減り0未満で消える():
+	var a := engine.create_agent(&"a")
+	engine.create_goal_for_agent(&"a", &"win", 1.0)
+	engine.set_decay(0.1, Gamygdala.DecayType.LINEAR)
+	engine.appraise_belief(1.0, &"", [&"win"], [1.0])
+	engine.decay_all(2.0)
+	assert_emotions(a, {"joy": 0.3})
+	engine.decay_all(3.0)
+	assert_emotions(a, {})
+
+
+func test_相手に向けた感情も減衰する():
+	var a := engine.create_agent(&"a")
+	engine.create_agent(&"b")
+	engine.create_goal_for_agent(&"a", &"star", 1.0)
+	engine.appraise_belief(1.0, &"b", [&"star"], [-1.0])
+	engine.decay_all(1.0)
+	assert_emotions(a, {"distress": 0.4, "anger": 0.4})
+	assert_almost_eq(a.get_relation(&"b").emotion_list[0].intensity, 0.4, 0.000001)
+
+
+func test_感情状態をPADに変換できる():
+	var a := engine.create_agent(&"a")
+	engine.create_agent(&"b")
+	engine.create_goal_for_agent(&"a", &"star", 1.0)
+	engine.appraise_belief(1.0, &"b", [&"star"], [-1.0])
+	var pad := a.get_pad_state(false)
+	assert_almost_eq(pad, Vector3(-0.56, 0.435, -0.055), Vector3.ONE * 0.000001)
+	a.set_gain(2.0)
+	var gained := a.get_pad_state(true)
+	assert_almost_eq(gained, Vector3(-0.528302, 0.465241, -0.099099), Vector3.ONE * 0.000001)

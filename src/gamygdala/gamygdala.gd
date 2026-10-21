@@ -64,6 +64,9 @@ class Relation:
 				return
 		emotion_list.append(Emotion.new(emotion.name, emotion.intensity))
 
+	func decay(engine: Gamygdala, seconds: float) -> void:
+		Gamygdala._decay_emotions(emotion_list, engine, seconds)
+
 
 ## 感情を持つ主体（NPCやプレイヤー）
 class Agent:
@@ -71,9 +74,17 @@ class Agent:
 	var goals: Array[Goal] = []
 	var internal_state: Array[Emotion] = []
 	var current_relations: Array[Relation] = []
+	var gain := 1.0
 
 	func _init(p_name: StringName) -> void:
 		name = p_name
+
+	## 0より大きく20以下。大きいほど小さな感情も強く表れる
+	func set_gain(p_gain: float) -> void:
+		if p_gain <= 0.0 or p_gain > 20.0:
+			push_error("Gamygdala: gain factor must be between 0 and 20")
+			return
+		gain = p_gain
 
 	func add_goal(goal: Goal) -> void:
 		goals.append(goal)
@@ -95,8 +106,30 @@ class Agent:
 				return
 		internal_state.append(Emotion.new(emotion.name, emotion.intensity))
 
-	func get_emotional_state(_use_gain := false) -> Array[Emotion]:
-		return internal_state
+	## use_gain なら、各感情の強さをゲインで 0〜1 に収めたものを返す
+	func get_emotional_state(use_gain := false) -> Array[Emotion]:
+		if not use_gain:
+			return internal_state
+		var gained: Array[Emotion] = []
+		for e in internal_state:
+			gained.append(Emotion.new(e.name, (gain * e.intensity) / (gain * e.intensity + 1.0)))
+		return gained
+
+	## 感情状態を PAD（快・覚醒・支配）に変換する。原典では配列だが Vector3 で返す
+	func get_pad_state(use_gain := false) -> Vector3:
+		var pad := Vector3.ZERO
+		for e in internal_state:
+			pad += e.intensity * Gamygdala.PAD_MAP[e.name]
+		if use_gain:
+			for i in 3:
+				pad[i] = gain * pad[i] / (gain * pad[i] + 1.0) if pad[i] >= 0.0 else -gain * pad[i] / (gain * pad[i] - 1.0)
+		return pad
+
+	## 感情状態と関係の感情を減衰させる
+	func decay(engine: Gamygdala, seconds: float) -> void:
+		Gamygdala._decay_emotions(internal_state, engine, seconds)
+		for r in current_relations:
+			r.decay(engine, seconds)
 
 	## 相手との関係を設定する（なければ作る）
 	func update_relation(agent_name: StringName, like: float) -> void:
@@ -116,8 +149,33 @@ class Agent:
 		return null
 
 
+enum DecayType { LINEAR, EXPONENTIAL }
+
+## 各感情の PAD（快・覚醒・支配）値
+const PAD_MAP := {
+	&"distress": Vector3(-0.61, 0.28, -0.36),
+	&"fear": Vector3(-0.64, 0.6, -0.43),
+	&"hope": Vector3(0.51, 0.23, 0.14),
+	&"joy": Vector3(0.76, 0.48, 0.35),
+	&"satisfaction": Vector3(0.87, 0.2, 0.62),
+	&"fear-confirmed": Vector3(-0.61, 0.06, -0.32),
+	&"disappointment": Vector3(-0.61, -0.15, -0.29),
+	&"relief": Vector3(0.29, -0.19, -0.28),
+	&"happy-for": Vector3(0.64, 0.35, 0.25),
+	&"resentment": Vector3(-0.35, 0.35, 0.29),
+	&"pity": Vector3(-0.52, 0.02, -0.21),
+	&"gloating": Vector3(-0.45, 0.48, 0.42),
+	&"gratitude": Vector3(0.64, 0.16, -0.21),
+	&"anger": Vector3(-0.51, 0.59, 0.25),
+	&"gratification": Vector3(0.69, 0.57, 0.63),
+	&"remorse": Vector3(-0.57, 0.28, -0.34),
+}
+
 var agents: Array[Agent] = []
 var goals: Array[Goal] = []
+var decay_type := DecayType.EXPONENTIAL
+## 指数減衰なら1秒あたりの倍率、線形減衰なら1秒あたりの減少量
+var decay_factor := 0.8
 
 
 func create_agent(agent_name: StringName) -> Agent:
@@ -289,3 +347,39 @@ func _agent_actions(affected_name: StringName, causal_name: StringName, self_nam
 		var emotion := Emotion.new(&"gratification" if desirability >= 0.0 else &"remorse", absf(utility * delta_likelihood * relation.like))
 		relation.add_emotion(emotion)
 		causal_agent.update_emotional_state(emotion)
+
+
+func set_gain(gain: float) -> void:
+	for a in agents:
+		a.set_gain(gain)
+
+
+func set_decay(p_decay_factor: float, p_decay_type: DecayType) -> void:
+	decay_factor = p_decay_factor
+	decay_type = p_decay_type
+
+
+## 全員の感情を seconds 秒ぶん減衰させる。
+## 原典は前回呼び出しからの経過時間を Date.now() で測るが、ここでは引数で受け取る
+func decay_all(seconds: float) -> void:
+	for a in agents:
+		a.decay(self, seconds)
+
+
+func _decay_value(value: float, seconds: float) -> float:
+	match decay_type:
+		DecayType.LINEAR:
+			return value - decay_factor * seconds
+		_:
+			return value * pow(decay_factor, seconds)
+
+
+## 0未満になった感情は取り除く。
+## 原典は配列を前から走査しながら削除するため直後の要素の減衰が飛ばされるが、ここでは後ろから走査して避ける
+static func _decay_emotions(emotions: Array[Emotion], engine: Gamygdala, seconds: float) -> void:
+	for i in range(emotions.size() - 1, -1, -1):
+		var new_intensity := engine._decay_value(emotions[i].intensity, seconds)
+		if new_intensity < 0.0:
+			emotions.remove_at(i)
+		else:
+			emotions[i].intensity = new_intensity
