@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://src/player/player.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Extra animations and enemies/Alien sprites/alienGreen_stand.png" id="2_stand"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Extra animations and enemies/Alien sprites/alienGreen_walk1.png" id="3_walk1"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Extra animations and enemies/Alien sprites/alienGreen_walk2.png" id="4_walk2"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Extra animations and enemies/Alien sprites/alienGreen_jump.png" id="5_jump"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_alien"]
+animations = [{
+"frames": [{"duration": 1.0, "texture": ExtResource("2_stand")}],
+"loop": true,
+"name": &"stand",
+"speed": 5.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("3_walk1")}, {"duration": 1.0, "texture": ExtResource("4_walk2")}],
+"loop": true,
+"name": &"walk",
+"speed": 8.0
+}, {
+"frames": [{"duration": 1.0, "texture": ExtResource("5_jump")}],
+"loop": true,
+"name": &"jump",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(48, 88)
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_script")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_alien")
+animation = &"stand"
+
+[node name="FaceLabel" type="Label" parent="."]
+offset_left = -41.0
+offset_top = -54.0
+offset_right = 39.0
+offset_bottom = 26.0
+theme_override_font_sizes/font_size = 52
+text = "😐"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 2)
+shape = SubResource("RectangleShape2D_body")
