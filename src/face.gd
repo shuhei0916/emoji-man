@@ -1,7 +1,7 @@
 class_name Face
 extends RefCounted
 
-enum Mood { NEUTRAL, HAPPY }
+enum Mood { NEUTRAL, HAPPY, SAD, HAPPY_FOR, PITY, RESENTMENT, GLOATING }
 
 const EMOJIS := {
 	Mood.NEUTRAL: "😐",
