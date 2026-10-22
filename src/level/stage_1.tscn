@@ -38,7 +38,6 @@ position = Vector2(1365, 245)
 
 [node name="Player" parent="." unique_id=1663269916 instance=ExtResource("10_hp4je")]
 position = Vector2(175, 449)
-dislikes = Array[StringName]([&"npc"])
 wants = Array[StringName]([&"star"])
 
 [node name="Camera2D" type="Camera2D" parent="Player" unique_id=1386703739]
