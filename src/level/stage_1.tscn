@@ -31,7 +31,6 @@ position = Vector2(385, 455)
 [node name="Npc" parent="." unique_id=624440002 instance=ExtResource("6_c8pkf")]
 position = Vector2(455, 449)
 likes = Array[StringName]([&"player"])
-wants = Array[StringName]([&"star"])
 
 [node name="GoalFlag" parent="." unique_id=1121265507 instance=ExtResource("8_j75au")]
 position = Vector2(1365, 245)

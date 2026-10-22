@@ -30,3 +30,14 @@ func test_一番強い感情が落ち込み系なら移動が遅くなる():
 	var buff := MoodBuff.from_emotions(_emotions({"distress": 0.5}))
 	assert_eq(buff.speed_multiplier, 0.5)
 	assert_eq(buff.jump_height_multiplier, 1.0)
+
+
+func test_一番強い感情が怒りなら箱を壊せる():
+	var buff := MoodBuff.from_emotions(_emotions({"anger": 0.5, "distress": 0.4}))
+	assert_true(buff.can_break)
+	assert_eq(buff.speed_multiplier, 1.0, "怒っているときは落ち込みで遅くならない")
+
+
+func test_怒っていなければ箱は壊せない():
+	assert_false(MoodBuff.from_emotions(_emotions({})).can_break)
+	assert_false(MoodBuff.from_emotions(_emotions({"joy": 0.5})).can_break)

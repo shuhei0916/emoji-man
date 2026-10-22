@@ -24,6 +24,10 @@ func _physics_process(delta: float) -> void:
 	var buff := MoodBuff.from_emotions(agent.get_emotional_state())
 	velocity = compute_velocity(velocity, direction, Input.is_action_just_pressed("jump"), is_on_floor(), delta, buff.speed_multiplier, buff.jump_height_multiplier)
 	move_and_slide()
+	for i in get_slide_collision_count():
+		var collider := get_slide_collision(i).get_collider()
+		if collider is BreakableBox:
+			collider.hit_by(self)
 	_update_animation(direction)
 
 

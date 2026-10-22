@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gimmick/breakable_box.gd" id="1_box"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/boxAlt.png" id="2_box"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_box"]
+size = Vector2(70, 70)
+
+[node name="BreakableBox" type="StaticBody2D"]
+script = ExtResource("1_box")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_box")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_box")
