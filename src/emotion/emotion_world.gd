@@ -34,8 +34,11 @@ func register(id: StringName, likes: Array[StringName], dislikes: Array[StringNa
 	return agent
 
 
-## taker が item を手に入れた。欲しがっていた本人には良いこと、他に欲しがっていた人には taker のせいの悪いこと
-func item_taken(taker: StringName, item: StringName) -> void:
+## taker が item を手に入れた。欲しがっていた本人には良いこと、他に欲しがっていた人には悪いこと。
+## cause はそれを起こした人（省略すると taker 自身）。人からもらえば感謝、横取りされればその人に怒る
+func item_taken(taker: StringName, item: StringName, cause := &"") -> void:
+	if cause == &"":
+		cause = taker
 	var goal_names: Array[StringName] = []
 	var congruences: Array[float] = []
 	for agent in engine.agents:
@@ -48,7 +51,19 @@ func item_taken(taker: StringName, item: StringName) -> void:
 		congruences.append(1.0 if agent.name == taker else -1.0)
 	if goal_names.is_empty():
 		return
-	engine.appraise_belief(1.0, taker, goal_names, congruences)
+	engine.appraise_belief(1.0, cause, goal_names, congruences)
+
+
+## agent が一番強く感謝している相手のid。いなければ空
+func grateful_to(agent: Gamygdala.Agent) -> StringName:
+	var best := &""
+	var best_intensity := EmojiExpression.MIN_INTENSITY
+	for relation in agent.current_relations:
+		for e in relation.emotion_list:
+			if e.name == &"gratitude" and e.intensity >= best_intensity:
+				best = relation.agent_name
+				best_intensity = e.intensity
+	return best
 
 
 static func _want_goal(id: StringName, item: StringName) -> StringName:

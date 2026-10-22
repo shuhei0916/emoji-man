@@ -81,3 +81,25 @@ func test_嫌いな人から欲しいものを奪うと喜びとざまあみろ�
 	_spawn(NpcScene, &"npc", [&"star"])
 	player.take_item(&"star")
 	assert_eq(_face_of(player), "😈")
+
+
+func test_欲しいものを人からもらうと感謝する():
+	_spawn(PlayerScene, &"player", [])
+	var npc := _spawn(NpcScene, &"npc", [&"star"])
+	world.item_taken(&"npc", &"star", &"player")
+	assert_eq(_face_of(npc), "🥹")
+	assert_eq(world.grateful_to(npc.agent), &"player", "感謝している相手が分かる")
+
+
+func test_自分で手に入れたときは誰にも感謝しない():
+	var npc := _spawn(NpcScene, &"npc", [&"star"])
+	world.item_taken(&"npc", &"star")
+	assert_eq(_face_of(npc), "😄")
+	assert_eq(world.grateful_to(npc.agent), &"")
+
+
+func test_欲しいものを人に横取りされると横取りした人に怒る():
+	var player := _spawn(PlayerScene, &"player", [&"star"])
+	_spawn(NpcScene, &"npc", [&"star"])
+	world.item_taken(&"npc", &"star", &"npc")
+	assert_eq(_face_of(player), "😠")
