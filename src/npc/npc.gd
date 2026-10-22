@@ -1,6 +1,7 @@
 class_name Npc
 extends EmojiCharacter
 ## 欲しいものがあれば、そこへ向かってゆっくり歩くキャラクター。
+## 怒っていれば木箱を壊し、感謝している相手には持っている物を投げて渡す。
 
 ## プレイヤーの速さに対する歩く速さの割合
 const WALK_SPEED_RATIO := 0.4
@@ -10,7 +11,22 @@ const ARRIVE_DISTANCE := 5.0
 
 func _physics_process(delta: float) -> void:
 	velocity = Player.compute_velocity(velocity, walk_direction(), false, is_on_floor(), delta, WALK_SPEED_RATIO)
-	move_and_slide()
+	move_and_bump()
+	give_to_benefactor()
+
+
+## 感謝している相手がいれば、その人へ向けて持っている物を投げる
+func give_to_benefactor() -> void:
+	if held == null:
+		return
+	var benefactor := _world.grateful_to(agent)
+	if benefactor == &"":
+		return
+	for c: EmojiCharacter in get_tree().get_nodes_in_group(GROUP):
+		if c.id == benefactor:
+			facing = signf(c.global_position.x - global_position.x)
+			throw()
+			return
 
 
 ## 一番近い欲しいものへ向かう向き（-1, 0, 1）

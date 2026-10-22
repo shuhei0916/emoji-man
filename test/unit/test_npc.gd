@@ -60,3 +60,38 @@ func test_欲しいものの真下では止まる():
 	npc.position = Vector2.ZERO
 	_item_at(2, &"star")
 	assert_eq(npc.walk_direction(), 0.0)
+
+
+func _npc_with_key() -> Npc:
+	var giver: Npc = NpcScene.instantiate()
+	giver.id = &"giver"
+	giver.wants = [&"star"]
+	var key: WantedItem = preload("res://src/item/wanted_item.tscn").instantiate()
+	key.item_id = &"key"
+	giver.add_child(key)
+	return add_child_autofree(giver)
+
+
+func test_シーンで子として置いたアイテムは最初から持っている():
+	var giver := _npc_with_key()
+	assert_not_null(giver.held)
+	assert_eq(giver.held.item_id, &"key")
+
+
+func test_感謝している相手に持っている物を投げて渡す():
+	var giver := _npc_with_key()
+	var player: Player = add_child_autofree(preload("res://src/player/player.tscn").instantiate())
+	player.global_position = Vector2(-200, 0)
+	giver.global_position = Vector2.ZERO
+	var key := giver.held
+	giver._world.item_taken(&"giver", &"star", &"player")
+	giver.give_to_benefactor()
+	assert_null(giver.held)
+	assert_lt(key.velocity.x, 0.0, "相手のいる左へ投げる")
+
+
+func test_感謝していなければ持っている物を渡さない():
+	var giver := _npc_with_key()
+	giver._world.item_taken(&"giver", &"star")
+	giver.give_to_benefactor()
+	assert_not_null(giver.held)

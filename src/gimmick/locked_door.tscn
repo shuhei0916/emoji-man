@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/gimmick/locked_door.gd" id="1_door"]
+[ext_resource type="Texture2D" path="res://assets/kenney_platformer-art-deluxe/Base pack/Tiles/lock_yellow.png" id="2_lock"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(70, 210)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_touch"]
+size = Vector2(90, 210)
+
+[node name="LockedDoor" type="StaticBody2D"]
+script = ExtResource("1_door")
+
+[node name="Top" type="Sprite2D" parent="."]
+position = Vector2(0, -70)
+texture = ExtResource("2_lock")
+
+[node name="Middle" type="Sprite2D" parent="."]
+texture = ExtResource("2_lock")
+
+[node name="Bottom" type="Sprite2D" parent="."]
+position = Vector2(0, 70)
+texture = ExtResource("2_lock")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="TouchArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TouchArea"]
+shape = SubResource("RectangleShape2D_touch")
+
+[connection signal="body_entered" from="TouchArea" to="." method="_on_body_entered"]

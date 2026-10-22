@@ -23,16 +23,21 @@ func _physics_process(delta: float) -> void:
 	var direction := Input.get_axis("move_left", "move_right")
 	var buff := MoodBuff.from_emotions(agent.get_emotional_state())
 	velocity = compute_velocity(velocity, direction, Input.is_action_just_pressed("jump"), is_on_floor(), delta, buff.speed_multiplier, buff.jump_height_multiplier)
-	move_and_slide()
-	for i in get_slide_collision_count():
-		var collider := get_slide_collision(i).get_collider()
-		if collider is BreakableBox:
-			collider.hit_by(self)
+	if Input.is_action_just_pressed("throw"):
+		throw()
+	move_and_bump()
 	_update_animation(direction)
+
+
+## 手が空いていれば、触れた物は何でも持ち上げる
+func touch_item(item: WantedItem) -> void:
+	if held == null:
+		pick_up(item)
 
 
 func _update_animation(direction: float) -> void:
 	if direction != 0.0:
+		facing = signf(direction)
 		_sprite.flip_h = direction < 0.0
 	if not is_on_floor():
 		_sprite.play("jump")

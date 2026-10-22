@@ -27,7 +27,6 @@ tile_set = ExtResource("3_h0mdu")
 
 [node name="Star" parent="Items" unique_id=633413513 instance=ExtResource("4_6xnpn")]
 position = Vector2(595, 455)
-collision_mask = 2
 
 [node name="BreakableBox1" parent="." unique_id=447510292 instance=ExtResource("6_utvfg")]
 position = Vector2(1155, 105)
