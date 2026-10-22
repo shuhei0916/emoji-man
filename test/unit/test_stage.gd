@@ -74,3 +74,31 @@ func test_ステージごとの案内を表示する():
 	add_child_autofree(s)
 	assert_eq(s.hint_label.text, "⭐を取ると高く跳べる")
 	assert_true(s.hint_label.visible)
+
+
+func _press(action: StringName) -> void:
+	var ev := InputEventAction.new()
+	ev.action = action
+	ev.pressed = true
+	stage._unhandled_input(ev)
+
+
+func test_クリア後にジャンプを押すと次のステージへ進む():
+	stage.next_stage = "res://src/level/stage_2.tscn"
+	goal.reached.emit()
+	assert_string_contains(stage.clear_label.text, "次のステージ")
+	_press(&"jump")
+	assert_signal_emitted_with_parameters(stage, "next_stage_requested", ["res://src/level/stage_2.tscn"])
+
+
+func test_クリア前にジャンプを押しても次のステージへ進まない():
+	stage.next_stage = "res://src/level/stage_2.tscn"
+	_press(&"jump")
+	assert_signal_not_emitted(stage, "next_stage_requested")
+
+
+func test_次のステージがなければ全ステージクリアと表示し先へは進まない():
+	goal.reached.emit()
+	assert_string_contains(stage.clear_label.text, "全ステージクリア")
+	_press(&"jump")
+	assert_signal_not_emitted(stage, "next_stage_requested")
