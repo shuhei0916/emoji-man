@@ -28,3 +28,7 @@ func test_NPCはプレイヤーが星を取ると一緒に喜ぶ():
 func test_NPCは星へ歩いていかない():
 	var npc: Npc = stage.get_node("Npc")
 	assert_eq(npc.walk_direction(), 0.0)
+
+
+func test_クリアするとステージ2へ進む():
+	assert_eq(stage.next_stage, "res://src/level/stage_2.tscn")
