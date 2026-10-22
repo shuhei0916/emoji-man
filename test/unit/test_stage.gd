@@ -58,3 +58,19 @@ func test_落ちていなければやり直さない():
 func test_クリアしたらプレイヤーは動かなくなる():
 	goal.reached.emit()
 	assert_false(player.is_physics_processing())
+
+
+func test_ステージごとの案内を表示する():
+	var s := Stage.new()
+	s.auto_reload = false
+	s.hint_text = "⭐を取ると高く跳べる"
+	var p: Player = PlayerScene.instantiate()
+	p.id = &"p2"
+	var g: GoalFlag = FlagScene.instantiate()
+	s.add_child(p)
+	s.add_child(g)
+	s.player = p
+	s.goal = g
+	add_child_autofree(s)
+	assert_eq(s.hint_label.text, "⭐を取ると高く跳べる")
+	assert_true(s.hint_label.visible)
