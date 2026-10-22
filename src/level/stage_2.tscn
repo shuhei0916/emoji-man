@@ -14,6 +14,7 @@ script = ExtResource("1_auhnp")
 player = NodePath("Player")
 goal = NodePath("GoalFlag")
 fall_limit_y = 800.0
+next_stage = "res://src/level/stage_3.tscn"
 hint_text = "😠 怒っている間は、木箱に体当たりして壊せる"
 
 [node name="EmotionWorld" type="Node" parent="." unique_id=382672567]

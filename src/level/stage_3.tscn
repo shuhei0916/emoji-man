@@ -1,0 +1,70 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://src/level/stage.gd" id="1_b8cn2"]
+[ext_resource type="Script" path="res://src/emotion/emotion_world.gd" id="2_fhhh5"]
+[ext_resource type="TileSet" path="res://src/level/tileset.tres" id="3_yskab"]
+[ext_resource type="PackedScene" path="res://src/item/wanted_item.tscn" id="4_c2s8l"]
+[ext_resource type="PackedScene" path="res://src/gimmick/breakable_box.tscn" id="6_uejcq"]
+[ext_resource type="PackedScene" path="res://src/npc/npc.tscn" id="8_qhbgu"]
+[ext_resource type="PackedScene" path="res://src/goal/goal_flag.tscn" id="10_m0yt6"]
+[ext_resource type="PackedScene" path="res://src/player/player.tscn" id="12_vnni3"]
+
+[node name="Stage3" type="Node2D" unique_id=1547929532 node_paths=PackedStringArray("player", "goal")]
+script = ExtResource("1_b8cn2")
+player = NodePath("Player")
+goal = NodePath("GoalFlag")
+fall_limit_y = 800.0
+next_stage = "res://src/level/stage_4.tscn"
+hint_text = "怒っているのは、自分だけとは限らない
+移動: ← → / A D　ジャンプ: ↑ / W / Space　投げる: E / X　やり直し: R"
+
+[node name="EmotionWorld" type="Node" parent="." unique_id=1099877383]
+script = ExtResource("2_fhhh5")
+
+[node name="Ground" type="TileMapLayer" parent="." unique_id=71431397]
+tile_map_data = PackedByteArray("AAAAAAAABwAAAAAAAAABAAAABwAAAAAAAAACAAAABwAAAAAAAAADAAAABwAAAAAAAAAEAAAABwAAAAAAAAAFAAAABwAAAAAAAAAGAAAABwAAAAAAAAAHAAAABwAAAAAAAAAIAAAABwAAAAAAAAAJAAAABwAAAAAAAAAKAAAABwAAAAAAAAALAAAABwAAAAAAAAAMAAAABwAAAAAAAAANAAAABwAAAAAAAAAOAAAABwAAAAAAAAAPAAAABwAAAAAAAAAQAAAABwAAAAAAAAARAAAABwAAAAAAAAASAAAABwAAAAAAAAATAAAABwAAAAAAAAAUAAAABwAAAAAAAAAVAAAABwAAAAAAAAAWAAAABwAAAAAAAAAXAAAABwAAAAAAAAAYAAAABwAAAAAAAAAZAAAABwAAAAAAAAAAAAEABwAAAAAAAAAZAAEABwAAAAAAAAAAAAIABwAAAAAAAAAZAAIABwAAAAAAAAAAAAMABwAAAAAAAAAZAAMABwAAAAAAAAAAAAQABwAAAAAAAAAZAAQABwAAAAAAAAAAAAUABwAAAAAAAAACAAUAAQAAAAAAAAADAAUAAAAAAAAAAAAEAAUAAgAAAAAAAAAZAAUABwAAAAAAAAAAAAYABwAAAAAAAAAZAAYABwAAAAAAAAAAAAcAAQAAAAAAAAABAAcAAAAAAAAAAAACAAcAAAAAAAAAAAADAAcAAAAAAAAAAAAEAAcAAAAAAAAAAAAFAAcAAAAAAAAAAAAGAAcAAAAAAAAAAAAHAAcAAAAAAAAAAAAIAAcAAAAAAAAAAAAJAAcAAAAAAAAAAAAKAAcAAAAAAAAAAAALAAcAAAAAAAAAAAAMAAcAAAAAAAAAAAANAAcAAAAAAAAAAAAOAAcAAAAAAAAAAAAPAAcAAAAAAAAAAAAQAAcAAAAAAAAAAAARAAcAAAAAAAAAAAASAAcAAAAAAAAAAAATAAcAAAAAAAAAAAAUAAcAAAAAAAAAAAAVAAcAAAAAAAAAAAAWAAcAAAAAAAAAAAAXAAcAAAAAAAAAAAAYAAcAAAAAAAAAAAAZAAcAAgAAAAAAAAAAAAgAAwAAAAAAAAABAAgAAwAAAAAAAAACAAgAAwAAAAAAAAADAAgAAwAAAAAAAAAEAAgAAwAAAAAAAAAFAAgAAwAAAAAAAAAGAAgAAwAAAAAAAAAHAAgAAwAAAAAAAAAIAAgAAwAAAAAAAAAJAAgAAwAAAAAAAAAKAAgAAwAAAAAAAAALAAgAAwAAAAAAAAAMAAgAAwAAAAAAAAANAAgAAwAAAAAAAAAOAAgAAwAAAAAAAAAPAAgAAwAAAAAAAAAQAAgAAwAAAAAAAAARAAgAAwAAAAAAAAASAAgAAwAAAAAAAAATAAgAAwAAAAAAAAAUAAgAAwAAAAAAAAAVAAgAAwAAAAAAAAAWAAgAAwAAAAAAAAAXAAgAAwAAAAAAAAAYAAgAAwAAAAAAAAAZAAgAAwAAAAAAAAAAAAkAAwAAAAAAAAABAAkAAwAAAAAAAAACAAkAAwAAAAAAAAADAAkAAwAAAAAAAAAEAAkAAwAAAAAAAAAFAAkAAwAAAAAAAAAGAAkAAwAAAAAAAAAHAAkAAwAAAAAAAAAIAAkAAwAAAAAAAAAJAAkAAwAAAAAAAAAKAAkAAwAAAAAAAAALAAkAAwAAAAAAAAAMAAkAAwAAAAAAAAANAAkAAwAAAAAAAAAOAAkAAwAAAAAAAAAPAAkAAwAAAAAAAAAQAAkAAwAAAAAAAAARAAkAAwAAAAAAAAASAAkAAwAAAAAAAAATAAkAAwAAAAAAAAAUAAkAAwAAAAAAAAAVAAkAAwAAAAAAAAAWAAkAAwAAAAAAAAAXAAkAAwAAAAAAAAAYAAkAAwAAAAAAAAAZAAkAAwAAAAAAAAA=")
+tile_set = ExtResource("3_yskab")
+
+[node name="Items" type="Node2D" parent="." unique_id=794704321]
+
+[node name="Star" parent="Items" unique_id=1816673511 instance=ExtResource("4_c2s8l")]
+position = Vector2(245, 315)
+
+[node name="BreakableBox1" parent="." unique_id=794522502 instance=ExtResource("6_uejcq")]
+position = Vector2(875, 105)
+
+[node name="BreakableBox2" parent="." unique_id=1256449834 instance=ExtResource("6_uejcq")]
+position = Vector2(875, 175)
+
+[node name="BreakableBox3" parent="." unique_id=1011753947 instance=ExtResource("6_uejcq")]
+position = Vector2(875, 245)
+
+[node name="BreakableBox4" parent="." unique_id=275581393 instance=ExtResource("6_uejcq")]
+position = Vector2(875, 315)
+
+[node name="BreakableBox5" parent="." unique_id=19857396 instance=ExtResource("6_uejcq")]
+position = Vector2(875, 385)
+
+[node name="BreakableBox6" parent="." unique_id=847859725 instance=ExtResource("6_uejcq")]
+position = Vector2(875, 455)
+
+[node name="Npc" parent="." unique_id=822430000 instance=ExtResource("8_qhbgu")]
+position = Vector2(1085, 449)
+id = &"npc"
+wants = Array[StringName]([&"star"])
+
+[node name="GoalFlag" parent="." unique_id=1502397214 instance=ExtResource("10_m0yt6")]
+position = Vector2(1645, 455)
+
+[node name="Player" parent="." unique_id=80026626 instance=ExtResource("12_vnni3")]
+position = Vector2(525, 449)
+id = &"player"
+wants = Array[StringName]([&"star"])
+
+[node name="Camera2D" type="Camera2D" parent="Player" unique_id=1926514071]
+limit_left = 0
+limit_top = 0
+limit_right = 1820
+limit_bottom = 700
+position_smoothing_enabled = true
+

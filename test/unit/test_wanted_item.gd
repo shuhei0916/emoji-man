@@ -102,3 +102,20 @@ func test_キャラクター以外が触れても何も起きない():
 	item._on_body_entered(other)
 	assert_false(item.is_queued_for_deletion())
 	assert_null(item.holder)
+
+
+func _joy_of(c: EmojiCharacter) -> float:
+	for e in c.agent.get_emotional_state():
+		if e.name == &"joy":
+			return e.intensity
+	return 0.0
+
+
+func test_一度手に入れた物を拾い直してももう一度は喜ばない():
+	item._on_body_entered(player)
+	var joy := _joy_of(player)
+	player.throw()
+	item._ignore_left = 0.0
+	item._on_body_entered(player)
+	assert_eq(player.held, item)
+	assert_almost_eq(_joy_of(player), joy, 0.0001)

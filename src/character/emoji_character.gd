@@ -56,9 +56,12 @@ func touch_item(item: WantedItem) -> void:
 	item.queue_free()
 
 
-## アイテムを持ち上げて手に入れる
+## アイテムを持ち上げて手に入れる。一度手に入れた物を拾い直しても、もう一度は喜ばない
 func pick_up(item: WantedItem) -> void:
 	_hold(item)
+	if id in item.owners:
+		return
+	item.owners.append(id)
 	take_item(item.item_id, item.last_thrower)
 
 

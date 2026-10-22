@@ -23,5 +23,5 @@ func test_NPCに星を取られるとプレイヤーは怒って木箱を壊せ�
 	assert_true(MoodBuff.from_emotions(stage.player.agent.get_emotional_state()).can_break)
 
 
-func test_最後のステージなので次はない():
-	assert_eq(stage.next_stage, "")
+func test_クリアするとステージ3へ進む():
+	assert_eq(stage.next_stage, "res://src/level/stage_3.tscn")

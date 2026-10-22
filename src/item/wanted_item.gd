@@ -16,6 +16,8 @@ const REPICK_DELAY := 0.4
 var holder: EmojiCharacter
 ## 最後に投げた人のid。受け取った人にとって、手に入れた出来事を起こした人になる
 var last_thrower := &""
+## これまでに手に入れたことのある人のid。拾い直しても、もう一度は出来事にならない
+var owners: Array[StringName] = []
 
 var _ignored: EmojiCharacter
 var _ignore_left := 0.0

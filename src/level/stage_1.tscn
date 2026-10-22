@@ -15,7 +15,7 @@ goal = NodePath("GoalFlag")
 fall_limit_y = 800.0
 next_stage = "res://src/level/stage_2.tscn"
 hint_text = "⭐を取ると嬉しくなって、少しの間だけ高く跳べる
-移動: ← → / A D　ジャンプ: ↑ / W / Space　やり直し: R"
+移動: ← → / A D　ジャンプ: ↑ / W / Space　投げる: E / X　やり直し: R"
 
 [node name="EmotionWorld" type="Node" parent="." unique_id=28206577]
 script = ExtResource("2_wq44h")
