@@ -1,10 +1,10 @@
-[gd_scene format=4]
+[gd_scene format=4 uid="uid://c2nn7b4ryyees"]
 
 [ext_resource type="TileSet" path="res://src/level/tileset.tres" id="1_em31m"]
 [ext_resource type="PackedScene" path="res://src/item/wanted_item.tscn" id="2_w7y1s"]
 [ext_resource type="PackedScene" path="res://src/player/player.tscn" id="4_ob0n7"]
 [ext_resource type="PackedScene" path="res://src/npc/npc.tscn" id="5_npc"]
-[ext_resource type="Script" path="res://src/emotion/emotion_world.gd" id="6_world"]
+[ext_resource type="Script" uid="uid://ctlljw8pv2g2m" path="res://src/emotion/emotion_world.gd" id="6_world"]
 
 [node name="Level" type="Node2D" unique_id=1303508936]
 
@@ -48,4 +48,3 @@ limit_top = 0
 limit_right = 2100
 limit_bottom = 700
 position_smoothing_enabled = true
-

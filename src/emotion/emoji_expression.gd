@@ -54,6 +54,12 @@ static func choose(emotions: Array[Gamygdala.Emotion]) -> String:
 	return EMOJIS[ranked[0].name]
 
 
+## 表に出ている一番強い感情の名前。なければ空
+static func dominant(emotions: Array[Gamygdala.Emotion]) -> StringName:
+	var ranked := _rank(emotions)
+	return ranked[0].name if not ranked.is_empty() else &""
+
+
 static func _compound_of(a: StringName, b: StringName) -> String:
 	for entry in COMPOUNDS:
 		var pair: Array = entry[0]
