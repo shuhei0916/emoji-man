@@ -20,14 +20,19 @@ const PRIORITY: Array[StringName] = [
 
 
 static func choose(emotions: Array[Gamygdala.Emotion], chart := EmotionChart.default()) -> String:
+	return choose_def(emotions, chart).emoji
+
+
+## 顔に出す感情の定義。感情がなければ普通の顔、上位2つが組み合わせなら複合絵文字
+static func choose_def(emotions: Array[Gamygdala.Emotion], chart := EmotionChart.default()) -> EmotionDef:
 	var ranked := _rank(emotions)
 	if ranked.is_empty():
-		return chart.get_emotion(EmotionChart.NEUTRAL).emoji
+		return chart.get_emotion(EmotionChart.NEUTRAL)
 	if ranked.size() >= 2 and ranked[1].intensity >= ranked[0].intensity * COMPOUND_RATIO:
 		var compound := chart.compound_of(ranked[0].name, ranked[1].name)
 		if compound != null:
-			return compound.emoji
-	return chart.get_emotion(ranked[0].name).emoji
+			return compound
+	return chart.get_emotion(ranked[0].name)
 
 
 ## 表に出ている一番強い感情の名前。なければ空

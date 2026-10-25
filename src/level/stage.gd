@@ -19,6 +19,7 @@ signal next_stage_requested(path: String)
 var cleared := false
 var clear_label: Label
 var hint_label: Label
+var chart_overlay: EmotionChartOverlay
 
 
 func _ready() -> void:
@@ -72,3 +73,7 @@ func _build_hud() -> void:
 	clear_label.add_theme_color_override("font_outline_color", Color(0.2, 0.25, 0.35))
 	clear_label.add_theme_constant_override("outline_size", 12)
 	hud.add_child(clear_label)
+
+	chart_overlay = EmotionChartOverlay.new()
+	chart_overlay.target = player
+	add_child(chart_overlay)

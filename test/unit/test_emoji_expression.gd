@@ -59,3 +59,9 @@ func test_上位2つが特定の組み合わせなら複合絵文字を表示す
 
 func test_組み合わせの2つ目が弱すぎると複合にならない():
 	assert_eq(EmojiExpression.choose(_emotions({"joy": 0.5, "gloating": 0.1})), "😄")
+
+
+func test_顔に出す感情の定義を返す():
+	assert_eq(EmojiExpression.choose_def(_emotions({})).id, &"neutral")
+	assert_eq(EmojiExpression.choose_def(_emotions({"anger": 0.5, "distress": 0.4})).id, &"anger")
+	assert_eq(EmojiExpression.choose_def(_emotions({"joy": 0.5, "gloating": 0.5})).id, &"joy+gloating")

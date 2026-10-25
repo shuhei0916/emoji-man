@@ -16,7 +16,7 @@ goal = NodePath("GoalFlag")
 fall_limit_y = 800.0
 next_stage = "res://src/level/stage_4.tscn"
 hint_text = "怒っているのは、自分だけとは限らない
-移動: ← → / A D　ジャンプ: ↑ / W / Space　投げる: E / X　やり直し: R"
+移動: ← → / A D　ジャンプ: ↑ / W / Space　投げる: E / X　やり直し: R　感情チャート: Tab"
 
 [node name="EmotionWorld" type="Node" parent="." unique_id=1099877383]
 script = ExtResource("2_fhhh5")
