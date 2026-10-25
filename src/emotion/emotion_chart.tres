@@ -9,7 +9,6 @@ script = ExtResource("1_0ab47")
 id = &"neutral"
 emoji = "😐"
 label = "ふつう"
-position = Vector2(0, 150)
 
 [sub_resource type="Resource" id="Resource_2yfot"]
 script = ExtResource("1_0ab47")
@@ -18,7 +17,7 @@ emoji = "😄"
 label = "喜び"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(500, 0)
+position = Vector2(680, -300)
 
 [sub_resource type="Resource" id="Resource_i7p0t"]
 script = ExtResource("1_0ab47")
@@ -27,7 +26,7 @@ emoji = "😢"
 label = "悲しみ"
 speed_multiplier = 0.5
 group = &"down"
-position = Vector2(-480, 230)
+position = Vector2(-300, 330)
 
 [sub_resource type="Resource" id="Resource_ketyy"]
 script = ExtResource("1_0ab47")
@@ -35,7 +34,7 @@ id = &"hope"
 emoji = "🙂"
 label = "期待"
 group = &"none"
-position = Vector2(60, 620)
+position = Vector2(-680, 300)
 
 [sub_resource type="Resource" id="Resource_jgs6i"]
 script = ExtResource("1_0ab47")
@@ -43,7 +42,7 @@ id = &"fear"
 emoji = "😨"
 label = "不安"
 group = &"none"
-position = Vector2(320, 620)
+position = Vector2(-920, 300)
 
 [sub_resource type="Resource" id="Resource_27i4p"]
 script = ExtResource("1_0ab47")
@@ -52,7 +51,7 @@ emoji = "😌"
 label = "満足"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(780, 130)
+position = Vector2(920, -300)
 
 [sub_resource type="Resource" id="Resource_nesju"]
 script = ExtResource("1_0ab47")
@@ -61,7 +60,7 @@ emoji = "😱"
 label = "やっぱり"
 speed_multiplier = 0.5
 group = &"down"
-position = Vector2(-760, 230)
+position = Vector2(0, 330)
 
 [sub_resource type="Resource" id="Resource_cx0s1"]
 script = ExtResource("1_0ab47")
@@ -70,7 +69,7 @@ emoji = "😞"
 label = "がっかり"
 speed_multiplier = 0.5
 group = &"down"
-position = Vector2(-480, 360)
+position = Vector2(-150, 330)
 
 [sub_resource type="Resource" id="Resource_g0pta"]
 script = ExtResource("1_0ab47")
@@ -79,7 +78,7 @@ emoji = "😅"
 label = "ほっとする"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(780, 260)
+position = Vector2(920, -150)
 
 [sub_resource type="Resource" id="Resource_jkfng"]
 script = ExtResource("1_0ab47")
@@ -88,7 +87,7 @@ emoji = "🥰"
 label = "一緒に喜ぶ"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(500, 260)
+position = Vector2(680, 0)
 
 [sub_resource type="Resource" id="Resource_2dsxf"]
 script = ExtResource("1_0ab47")
@@ -96,7 +95,7 @@ id = &"resentment"
 emoji = "😒"
 label = "ねたみ"
 group = &"none"
-position = Vector2(-200, 620)
+position = Vector2(-680, 150)
 
 [sub_resource type="Resource" id="Resource_pbouu"]
 script = ExtResource("1_0ab47")
@@ -105,7 +104,7 @@ emoji = "🥺"
 label = "同情"
 speed_multiplier = 0.5
 group = &"down"
-position = Vector2(-760, 360)
+position = Vector2(150, 330)
 
 [sub_resource type="Resource" id="Resource_m1a18"]
 script = ExtResource("1_0ab47")
@@ -114,7 +113,7 @@ emoji = "😏"
 label = "ざまあみろ"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(500, 390)
+position = Vector2(680, 150)
 
 [sub_resource type="Resource" id="Resource_yn0pd"]
 script = ExtResource("1_0ab47")
@@ -123,7 +122,7 @@ emoji = "🥹"
 label = "感謝"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(500, 130)
+position = Vector2(680, -150)
 
 [sub_resource type="Resource" id="Resource_wg4ln"]
 script = ExtResource("1_0ab47")
@@ -132,7 +131,7 @@ emoji = "😠"
 label = "怒り"
 can_break = true
 group = &"angry"
-position = Vector2(-480, 0)
+position = Vector2(-680, -150)
 
 [sub_resource type="Resource" id="Resource_pajq5"]
 script = ExtResource("1_0ab47")
@@ -141,7 +140,7 @@ emoji = "😎"
 label = "得意"
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(780, 390)
+position = Vector2(920, 0)
 
 [sub_resource type="Resource" id="Resource_v5wp1"]
 script = ExtResource("1_0ab47")
@@ -150,7 +149,7 @@ emoji = "😣"
 label = "後悔"
 speed_multiplier = 0.5
 group = &"down"
-position = Vector2(-760, 490)
+position = Vector2(300, 330)
 
 [sub_resource type="Resource" id="Resource_ik1sr"]
 script = ExtResource("1_0ab47")
@@ -160,7 +159,7 @@ label = "意地悪な喜び"
 components = Array[StringName]([&"joy", &"gloating"])
 jump_height_multiplier = 1.5
 group = &"happy"
-position = Vector2(780, 0)
+position = Vector2(680, 300)
 
 [sub_resource type="Resource" id="Resource_8wu7p"]
 script = ExtResource("3_nj1jn")
@@ -204,10 +203,52 @@ from = &"neutral"
 event = "嫌いな人が欲しい物を手に入れる"
 to = &"resentment"
 
+[sub_resource type="Resource" id="Resource_0ab47"]
+script = ExtResource("3_nj1jn")
+from = &"joy"
+event = "約10秒たつ"
+to = &"neutral"
+
+[sub_resource type="Resource" id="Resource_nk614"]
+script = ExtResource("3_nj1jn")
+from = &"gratitude"
+event = "約10秒たつ"
+to = &"neutral"
+
+[sub_resource type="Resource" id="Resource_nj1jn"]
+script = ExtResource("3_nj1jn")
+from = &"happy-for"
+event = "約10秒たつ"
+to = &"neutral"
+
+[sub_resource type="Resource" id="Resource_pivya"]
+script = ExtResource("3_nj1jn")
+from = &"gloating"
+event = "約10秒たつ"
+to = &"neutral"
+
+[sub_resource type="Resource" id="Resource_t617x"]
+script = ExtResource("3_nj1jn")
+from = &"joy+gloating"
+event = "約10秒たつ"
+to = &"neutral"
+
+[sub_resource type="Resource" id="Resource_n2dvg"]
+script = ExtResource("3_nj1jn")
+from = &"anger"
+event = "約10秒たつ"
+to = &"neutral"
+
+[sub_resource type="Resource" id="Resource_a8ij4"]
+script = ExtResource("3_nj1jn")
+from = &"resentment"
+event = "約10秒たつ"
+to = &"neutral"
+
 [resource]
 script = ExtResource("2_nk614")
 emotions = Array[ExtResource("1_0ab47")]([SubResource("Resource_ldfhi"), SubResource("Resource_2yfot"), SubResource("Resource_i7p0t"), SubResource("Resource_ketyy"), SubResource("Resource_jgs6i"), SubResource("Resource_27i4p"), SubResource("Resource_nesju"), SubResource("Resource_cx0s1"), SubResource("Resource_g0pta"), SubResource("Resource_jkfng"), SubResource("Resource_2dsxf"), SubResource("Resource_pbouu"), SubResource("Resource_m1a18"), SubResource("Resource_yn0pd"), SubResource("Resource_wg4ln"), SubResource("Resource_pajq5"), SubResource("Resource_v5wp1"), SubResource("Resource_ik1sr")])
-transitions = Array[ExtResource("3_nj1jn")]([SubResource("Resource_8wu7p"), SubResource("Resource_44g4a"), SubResource("Resource_8qn6l"), SubResource("Resource_vyv0v"), SubResource("Resource_se0t5"), SubResource("Resource_kbac2"), SubResource("Resource_g384t")])
+transitions = Array[ExtResource("3_nj1jn")]([SubResource("Resource_8wu7p"), SubResource("Resource_44g4a"), SubResource("Resource_8qn6l"), SubResource("Resource_vyv0v"), SubResource("Resource_se0t5"), SubResource("Resource_kbac2"), SubResource("Resource_g384t"), SubResource("Resource_0ab47"), SubResource("Resource_nk614"), SubResource("Resource_nj1jn"), SubResource("Resource_pivya"), SubResource("Resource_t617x"), SubResource("Resource_n2dvg"), SubResource("Resource_a8ij4")])
 group_titles = Dictionary[StringName, String]({
 &"angry": "怒り系",
 &"down": "落ち込み系",

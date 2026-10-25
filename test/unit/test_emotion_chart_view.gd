@@ -20,26 +20,45 @@ func test_感情ごとにノードができる():
 	assert_eq(_nodes().size(), chart.emotions.size())
 
 
-func test_ノードの見出しに絵文字と名前があり1行目にバフが書かれている():
+func test_見出しは大きな絵文字で1行目に括弧付きの名前2行目にバフが書かれている():
 	var joy: GraphNode = view.get_node("joy")
-	assert_string_contains(joy.title, "😄")
-	assert_string_contains(joy.title, "喜び")
-	assert_eq((joy.get_child(0) as Label).text, "ジャンプ×1.5")
+	assert_eq(joy.title, "😄")
+	assert_eq((joy.get_child(0) as Label).text, "（喜び）")
+	assert_eq((joy.get_child(1) as Label).text, "ジャンプ×1.5")
 
 
 func test_バフのない感情にはバフなしと書かれている():
 	var hope: GraphNode = view.get_node("hope")
-	assert_eq((hope.get_child(0) as Label).text, "バフなし")
+	assert_eq((hope.get_child(1) as Label).text, "バフなし")
 
 
-func test_出来事は元の感情の行として書かれ行き先へ線でつながる():
-	assert_eq(view.get_connection_list().size(), chart.transitions.size())
+func test_出来事はノードの中には書かれない():
 	var neutral: GraphNode = view.get_node("neutral")
+	assert_eq(neutral.get_child_count(), 2)
+
+
+func test_遷移ごとに出来事の書かれた矢印ができる():
+	assert_eq(view.arrows.size(), chart.transitions.size())
 	var t: EmotionTransition = chart.transitions[0]
-	assert_eq((neutral.get_child(1) as Label).text, t.event)
-	var first: Dictionary = view.get_connection_list().filter(func(c): return c.from_port == 0)[0]
-	assert_eq(first.from_node, &"neutral")
-	assert_eq(first.to_node, t.to)
+	assert_eq(view.arrows[0].from, t.from)
+	assert_eq(view.arrows[0].to, t.to)
+	assert_eq(view.arrows[0].event, t.event)
+
+
+func test_矢印は元のノードの縁から先のノードの縁まで引く():
+	var a := Rect2(0, 0, 100, 50)
+	var b := Rect2(300, 0, 100, 50)
+	var seg := EmotionChartView.arrow_between(a, b, 0.0)
+	assert_almost_eq(seg[0], Vector2(100, 25), Vector2(0.01, 0.01), "元の右の縁から")
+	assert_almost_eq(seg[1], Vector2(300, 25), Vector2(0.01, 0.01), "先の左の縁まで")
+
+
+func test_行きと帰りの矢印は重ならないように横へずらす():
+	var a := Rect2(0, 0, 100, 50)
+	var b := Rect2(300, 0, 100, 50)
+	var go := EmotionChartView.arrow_between(a, b, 8.0)
+	var back := EmotionChartView.arrow_between(b, a, 8.0)
+	assert_ne(go[0].y, back[1].y)
 
 
 func test_系統ごとに枠で囲む():

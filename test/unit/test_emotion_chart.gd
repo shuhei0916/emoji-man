@@ -47,3 +47,12 @@ func test_遷移の元と先はすべてチャートにある感情を指す():
 func test_GAMYGDALAの16の感情はすべてチャートにある():
 	for name in Gamygdala.PAD_MAP:
 		assert_not_null(chart.get_emotion(name), "%s" % name)
+
+
+func test_出来事で表に出る感情からは約10秒でふつうに戻る():
+	for t in chart.transitions:
+		if t.from != EmotionChart.NEUTRAL:
+			continue
+		var back := chart.transitions.filter(func(b): return b.from == t.to and b.to == EmotionChart.NEUTRAL)
+		assert_eq(back.size(), 1, "%s からふつうへ戻る" % t.to)
+		assert_eq(back[0].event, EmotionChart.DECAY_EVENT)

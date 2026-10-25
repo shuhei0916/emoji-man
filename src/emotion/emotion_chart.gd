@@ -5,6 +5,8 @@ extends Resource
 
 const DEFAULT_PATH := "res://src/emotion/emotion_chart.tres"
 const NEUTRAL := &"neutral"
+## 感情が自然に消えて「ふつう」に戻る出来事の名前（EmotionWorld の減衰で約10秒）
+const DECAY_EVENT := "約10秒たつ"
 
 @export var emotions: Array[EmotionDef] = []
 @export var transitions: Array[EmotionTransition] = []

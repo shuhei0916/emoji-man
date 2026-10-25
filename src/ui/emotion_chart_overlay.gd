@@ -2,7 +2,7 @@ class_name EmotionChartOverlay
 extends CanvasLayer
 ## ステージ中にTabで開閉する感情チャート。開いている間はゲームを止め、対象の今の感情を強調する。
 
-const FOOTER := "感情は約10秒で「ふつう」に戻る　　Tab: 閉じる"
+const FOOTER := "点線の矢印: %s と「ふつう」に戻る　　Tab: 閉じる" % EmotionChart.DECAY_EVENT
 ## ノードの位置の範囲に足す余白（左上は枠の見出し、右下はノードの大きさのぶん）
 const MARGIN_TOP_LEFT := Vector2(60, 80)
 const MARGIN_BOTTOM_RIGHT := Vector2(320, 220)
