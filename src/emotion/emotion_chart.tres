@@ -1,0 +1,216 @@
+[gd_resource type="Resource" script_class="EmotionChart" format=3]
+
+[ext_resource type="Script" path="res://src/emotion/emotion_def.gd" id="1_0ab47"]
+[ext_resource type="Script" path="res://src/emotion/emotion_chart.gd" id="2_nk614"]
+[ext_resource type="Script" path="res://src/emotion/emotion_transition.gd" id="3_nj1jn"]
+
+[sub_resource type="Resource" id="Resource_ldfhi"]
+script = ExtResource("1_0ab47")
+id = &"neutral"
+emoji = "😐"
+label = "ふつう"
+position = Vector2(0, 150)
+
+[sub_resource type="Resource" id="Resource_2yfot"]
+script = ExtResource("1_0ab47")
+id = &"joy"
+emoji = "😄"
+label = "喜び"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(500, 0)
+
+[sub_resource type="Resource" id="Resource_i7p0t"]
+script = ExtResource("1_0ab47")
+id = &"distress"
+emoji = "😢"
+label = "悲しみ"
+speed_multiplier = 0.5
+group = &"down"
+position = Vector2(-480, 230)
+
+[sub_resource type="Resource" id="Resource_ketyy"]
+script = ExtResource("1_0ab47")
+id = &"hope"
+emoji = "🙂"
+label = "期待"
+group = &"none"
+position = Vector2(60, 620)
+
+[sub_resource type="Resource" id="Resource_jgs6i"]
+script = ExtResource("1_0ab47")
+id = &"fear"
+emoji = "😨"
+label = "不安"
+group = &"none"
+position = Vector2(320, 620)
+
+[sub_resource type="Resource" id="Resource_27i4p"]
+script = ExtResource("1_0ab47")
+id = &"satisfaction"
+emoji = "😌"
+label = "満足"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(780, 130)
+
+[sub_resource type="Resource" id="Resource_nesju"]
+script = ExtResource("1_0ab47")
+id = &"fear-confirmed"
+emoji = "😱"
+label = "やっぱり"
+speed_multiplier = 0.5
+group = &"down"
+position = Vector2(-760, 230)
+
+[sub_resource type="Resource" id="Resource_cx0s1"]
+script = ExtResource("1_0ab47")
+id = &"disappointment"
+emoji = "😞"
+label = "がっかり"
+speed_multiplier = 0.5
+group = &"down"
+position = Vector2(-480, 360)
+
+[sub_resource type="Resource" id="Resource_g0pta"]
+script = ExtResource("1_0ab47")
+id = &"relief"
+emoji = "😅"
+label = "ほっとする"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(780, 260)
+
+[sub_resource type="Resource" id="Resource_jkfng"]
+script = ExtResource("1_0ab47")
+id = &"happy-for"
+emoji = "🥰"
+label = "一緒に喜ぶ"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(500, 260)
+
+[sub_resource type="Resource" id="Resource_2dsxf"]
+script = ExtResource("1_0ab47")
+id = &"resentment"
+emoji = "😒"
+label = "ねたみ"
+group = &"none"
+position = Vector2(-200, 620)
+
+[sub_resource type="Resource" id="Resource_pbouu"]
+script = ExtResource("1_0ab47")
+id = &"pity"
+emoji = "🥺"
+label = "同情"
+speed_multiplier = 0.5
+group = &"down"
+position = Vector2(-760, 360)
+
+[sub_resource type="Resource" id="Resource_m1a18"]
+script = ExtResource("1_0ab47")
+id = &"gloating"
+emoji = "😏"
+label = "ざまあみろ"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(500, 390)
+
+[sub_resource type="Resource" id="Resource_yn0pd"]
+script = ExtResource("1_0ab47")
+id = &"gratitude"
+emoji = "🥹"
+label = "感謝"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(500, 130)
+
+[sub_resource type="Resource" id="Resource_wg4ln"]
+script = ExtResource("1_0ab47")
+id = &"anger"
+emoji = "😠"
+label = "怒り"
+can_break = true
+group = &"angry"
+position = Vector2(-480, 0)
+
+[sub_resource type="Resource" id="Resource_pajq5"]
+script = ExtResource("1_0ab47")
+id = &"gratification"
+emoji = "😎"
+label = "得意"
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(780, 390)
+
+[sub_resource type="Resource" id="Resource_v5wp1"]
+script = ExtResource("1_0ab47")
+id = &"remorse"
+emoji = "😣"
+label = "後悔"
+speed_multiplier = 0.5
+group = &"down"
+position = Vector2(-760, 490)
+
+[sub_resource type="Resource" id="Resource_ik1sr"]
+script = ExtResource("1_0ab47")
+id = &"joy+gloating"
+emoji = "😈"
+label = "意地悪な喜び"
+components = Array[StringName]([&"joy", &"gloating"])
+jump_height_multiplier = 1.5
+group = &"happy"
+position = Vector2(780, 0)
+
+[sub_resource type="Resource" id="Resource_8wu7p"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "欲しい物を自分で手に入れる"
+to = &"joy"
+
+[sub_resource type="Resource" id="Resource_44g4a"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "欲しい物を人からもらう"
+to = &"gratitude"
+
+[sub_resource type="Resource" id="Resource_8qn6l"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "好きな人が欲しい物を手に入れる"
+to = &"happy-for"
+
+[sub_resource type="Resource" id="Resource_vyv0v"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "嫌いな人が欲しい物を取られる"
+to = &"gloating"
+
+[sub_resource type="Resource" id="Resource_se0t5"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "嫌いな人から欲しい物を奪う"
+to = &"joy+gloating"
+
+[sub_resource type="Resource" id="Resource_kbac2"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "欲しい物を人に取られる"
+to = &"anger"
+
+[sub_resource type="Resource" id="Resource_g384t"]
+script = ExtResource("3_nj1jn")
+from = &"neutral"
+event = "嫌いな人が欲しい物を手に入れる"
+to = &"resentment"
+
+[resource]
+script = ExtResource("2_nk614")
+emotions = Array[ExtResource("1_0ab47")]([SubResource("Resource_ldfhi"), SubResource("Resource_2yfot"), SubResource("Resource_i7p0t"), SubResource("Resource_ketyy"), SubResource("Resource_jgs6i"), SubResource("Resource_27i4p"), SubResource("Resource_nesju"), SubResource("Resource_cx0s1"), SubResource("Resource_g0pta"), SubResource("Resource_jkfng"), SubResource("Resource_2dsxf"), SubResource("Resource_pbouu"), SubResource("Resource_m1a18"), SubResource("Resource_yn0pd"), SubResource("Resource_wg4ln"), SubResource("Resource_pajq5"), SubResource("Resource_v5wp1"), SubResource("Resource_ik1sr")])
+transitions = Array[ExtResource("3_nj1jn")]([SubResource("Resource_8wu7p"), SubResource("Resource_44g4a"), SubResource("Resource_8qn6l"), SubResource("Resource_vyv0v"), SubResource("Resource_se0t5"), SubResource("Resource_kbac2"), SubResource("Resource_g384t")])
+group_titles = Dictionary[StringName, String]({
+&"angry": "怒り系",
+&"down": "落ち込み系",
+&"happy": "喜び系",
+&"none": "バフなし"
+})

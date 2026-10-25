@@ -1,35 +1,11 @@
 class_name EmojiExpression
 extends RefCounted
 ## 感情状態（GAMYGDALAの感情と強さの一覧）から、顔に表示する絵文字を1つ選ぶ。
+## 絵文字と複合絵文字は感情チャート（emotion_chart.tres）に書かれている。
 
-const NEUTRAL := "😐"
 ## これ未満の強さの感情は表に出ない
 const MIN_INTENSITY := 0.01
 
-const EMOJIS := {
-	&"joy": "😄",
-	&"distress": "😢",
-	&"hope": "🙂",
-	&"fear": "😨",
-	&"satisfaction": "😌",
-	&"fear-confirmed": "😱",
-	&"disappointment": "😞",
-	&"relief": "😅",
-	&"happy-for": "🥰",
-	&"resentment": "😒",
-	&"pity": "🥺",
-	&"gloating": "😏",
-	&"gratitude": "🥹",
-	&"anger": "😠",
-	&"gratification": "😎",
-	&"remorse": "😣",
-}
-
-
-## 上位2つの感情がこの組み合わせなら、複合絵文字を表示する
-const COMPOUNDS := [
-	[[&"joy", &"gloating"], "😈"],
-]
 ## 2つ目の感情が1つ目のこの割合以上の強さなら、複合になる
 const COMPOUND_RATIO := 0.5
 
@@ -43,29 +19,21 @@ const PRIORITY: Array[StringName] = [
 ]
 
 
-static func choose(emotions: Array[Gamygdala.Emotion]) -> String:
+static func choose(emotions: Array[Gamygdala.Emotion], chart := EmotionChart.default()) -> String:
 	var ranked := _rank(emotions)
 	if ranked.is_empty():
-		return NEUTRAL
+		return chart.get_emotion(EmotionChart.NEUTRAL).emoji
 	if ranked.size() >= 2 and ranked[1].intensity >= ranked[0].intensity * COMPOUND_RATIO:
-		var compound := _compound_of(ranked[0].name, ranked[1].name)
-		if compound != "":
-			return compound
-	return EMOJIS[ranked[0].name]
+		var compound := chart.compound_of(ranked[0].name, ranked[1].name)
+		if compound != null:
+			return compound.emoji
+	return chart.get_emotion(ranked[0].name).emoji
 
 
 ## 表に出ている一番強い感情の名前。なければ空
 static func dominant(emotions: Array[Gamygdala.Emotion]) -> StringName:
 	var ranked := _rank(emotions)
 	return ranked[0].name if not ranked.is_empty() else &""
-
-
-static func _compound_of(a: StringName, b: StringName) -> String:
-	for entry in COMPOUNDS:
-		var pair: Array = entry[0]
-		if (pair[0] == a and pair[1] == b) or (pair[0] == b and pair[1] == a):
-			return entry[1]
-	return ""
 
 
 ## 表に出る強さの感情を、強い順に並べる。強さが同じなら優先順位の順
