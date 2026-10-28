@@ -8,6 +8,12 @@ const HOLD_OFFSET := Vector2(0, -80)
 ## 投げる速さ（横は向いている方向）
 const THROW_VELOCITY := Vector2(450, -450)
 const GROUP := &"emoji_characters"
+## つぶれたときの顔（感情ではなく一瞬の反射）
+const SQUASHED_FACE := "😖"
+## つぶれてから元に戻るまでの秒数
+const SQUASH_DURATION := 0.3
+## つぶれた瞬間の見た目の倍率（縦に縮んで横に広がる）
+const SQUASH_SCALE := Vector2(1.3, 0.6)
 
 @export var id := &""
 ## 好きな人・嫌いな人のid
@@ -23,12 +29,22 @@ var held: WantedItem
 var facing := 1.0
 
 var _world: EmotionWorld
+## つぶれた状態が残っている秒数
+var _squash_left := 0.0
 
+@onready var _sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var _face_label: Label = $FaceLabel
+@onready var _body: CollisionShape2D = $CollisionShape2D
+@onready var _sprite_base_y := _sprite.position.y
+@onready var _face_base_y := _face_label.position.y
+@onready var _body_base_y := _body.position.y
+@onready var _body_base_height: float = _body.shape.size.y
 
 
 func _ready() -> void:
 	add_to_group(GROUP)
+	# つぶれると当たり判定の形を変えるので、同じシーンの他のキャラクターと共有しない
+	_body.shape = _body.shape.duplicate()
 	_world = get_tree().get_first_node_in_group(EmotionWorld.GROUP)
 	agent = _world.register(id, likes, dislikes, wants)
 	# シーンで子として置かれたアイテムは、最初から持っている
@@ -38,7 +54,9 @@ func _ready() -> void:
 	_refresh_face()
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	_squash_left = maxf(0.0, _squash_left - delta)
+	_apply_squash()
 	_refresh_face()
 
 
@@ -74,13 +92,23 @@ func throw() -> void:
 	item.release(self, Vector2(THROW_VELOCITY.x * facing, THROW_VELOCITY.y))
 
 
-## 動いたあと、ぶつかった木箱を（壊せる気分なら）壊す
+## 動いたあと、ぶつかった木箱を（壊せる気分なら）壊す。天井に頭をぶつけたらつぶれる
 func move_and_bump() -> void:
 	move_and_slide()
 	for i in get_slide_collision_count():
-		var collider := get_slide_collision(i).get_collider()
-		if collider is BreakableBox:
-			collider.hit_by(self)
+		var collision := get_slide_collision(i)
+		var collider := collision.get_collider()
+		if collider is BreakableBox and collider.hit_by(self):
+			continue
+		# 下向きの面（天井）には頭が当たっている
+		if collision.get_normal().y > 0.0:
+			squash()
+
+
+## つぶれる（ムギュ）
+func squash() -> void:
+	_squash_left = SQUASH_DURATION
+	_apply_squash()
 
 
 func _hold(item: WantedItem) -> void:
@@ -88,5 +116,22 @@ func _hold(item: WantedItem) -> void:
 	item.holder = self
 
 
+## つぶれ具合に合わせて見た目と当たり判定を縦に縮める（当たり判定の横幅は変えない）。
+## 天井に当たっている頭を中心に縮めるので、頭から離れた所ほど上がる
+func _apply_squash() -> void:
+	var scale_now := Vector2.ONE.lerp(SQUASH_SCALE, _squash_left / SQUASH_DURATION)
+	var head_y := _body_base_y - _body_base_height / 2.0
+	var shrink := 1.0 - scale_now.y
+	var face_center_y := _face_base_y + _face_label.size.y / 2.0
+	_sprite.scale = scale_now
+	_sprite.position.y = _sprite_base_y + (head_y - _sprite_base_y) * shrink
+	_face_label.position.y = _face_base_y + (head_y - face_center_y) * shrink
+	_body.shape.size.y = _body_base_height * scale_now.y
+	_body.position.y = _body_base_y + (head_y - _body_base_y) * shrink
+
+
 func _refresh_face() -> void:
+	if _squash_left > 0.0:
+		_face_label.text = SQUASHED_FACE
+		return
 	_face_label.text = EmojiExpression.choose(agent.get_emotional_state())

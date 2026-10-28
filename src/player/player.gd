@@ -5,8 +5,6 @@ const SPEED := 300.0
 const JUMP_VELOCITY := -750.0
 const GRAVITY := 1600.0
 
-@onready var _sprite: AnimatedSprite2D = $AnimatedSprite2D
-
 
 ## speed_multiplier: 横移動の速さの倍率, jump_height_multiplier: ジャンプの最高到達点の倍率
 static func compute_velocity(current: Vector2, direction: float, jump_pressed: bool, on_floor: bool, delta: float, speed_multiplier := 1.0, jump_height_multiplier := 1.0) -> Vector2:
